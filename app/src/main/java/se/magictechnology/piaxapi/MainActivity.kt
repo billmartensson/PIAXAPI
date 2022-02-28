@@ -12,9 +12,15 @@ class Student (
     var address: String? = null) {
 }
 
+class Disneyinfo {
+    var data : List<Disneychar>? = null
+}
+
 class Disneychar {
     var _id : Int? = null
     var name : String? = null
+    var tvShows : List<String>? = null
+    var imageUrl : String? = null
 }
 
 class MainActivity : AppCompatActivity() {
@@ -46,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 
     fun run() {
         val request = Request.Builder()
-            .url("https://api.disneyapi.dev/characters/37")
+            .url("https://api.disneyapi.dev/characters")
             .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -68,9 +74,18 @@ class MainActivity : AppCompatActivity() {
 
                     Log.i("PIAXDEBUG", responstext)
 
-                    val abu = Gson().fromJson(responstext, Disneychar::class.java)
+                    val alldisney = Gson().fromJson(responstext, Disneyinfo::class.java)
 
-                    Log.i("PIAXDEBUG", abu.name!!)
+                    Log.i("PIAXDEBUG", alldisney.data!!.size.toString())
+
+                    for(disneyperson in alldisney.data!!)
+                    {
+                        Log.i("PIAXDEBUG", "** " +disneyperson.name!!)
+                        for(tv in disneyperson.tvShows!!)
+                        {
+                            Log.i("PIAXDEBUG", "* " + tv)
+                        }
+                    }
 
                 }
             }
@@ -78,3 +93,46 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
+
+/*
+RECEPT API
+* Login
+POST /login - email/password
+- json {"key": "abc"}
+
+* Hämta alla recept
+GET /recipes
+HEADER "key" : "abc"
+- json [recept]
+
+* Receptinfo
+GET /recipe/123
+HEADER "key" : "abc"
+- json fullreceipe
+
+* Spara recept
+POST /recipe - json med recept
+HEADER "key" : "abc"
+- json fullreceipe eller ok
+
+
+class ReceipeAPI : ViewModel() {
+
+    Livedata
+
+    fun login() {}
+
+    fun getAllRecipes() {}
+
+    fun getReceipe(recipeid : Int) {}
+
+    fun saveRecipe(rec : Recipe) {}
+
+
+
+}
+
+
+
+
+ */
